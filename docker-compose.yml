@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+
+    react-ui:
+        build:
+            context: app
+            dockerfile: Dockerfile-ui
+        ports:
+            - "3000:3000"
+        container_name: react-ui
+        stdin_open: true
+        volumes:
+            - ./app:/usr/src/app/
+
+    db:
+        image: postgres:15
+        restart: always
+        environment:
+            POSTGRES_PASSWORD: password
+            POSTGRES_USER: admin
+            POSTGRES_DB: db
+
