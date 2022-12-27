@@ -1,8 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react';
 import './App.css';
-import {Content, Header} from "antd/lib/layout/layout";
-import {Button, Spin} from "antd";
+import {Button} from "antd";
 
 function App() {
 
@@ -13,7 +11,7 @@ function App() {
         setApiResult(null);
         setIsLoading(true);
         try {
-            const response = await fetch('http://192.168.233.198/api/v1/test', {mode:'cors'});
+            const response = await fetch('http://localhost/api/v1/test', {mode:'cors'});
             const data = await response.json();
             setTimeout(() => {
                 setApiResult(data["test"]);
