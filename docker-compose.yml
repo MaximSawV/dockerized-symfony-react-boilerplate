@@ -2,21 +2,54 @@ version: '3.8'
 services:
 
     react-ui:
+        container_name: react-ui_boilerplate
         build:
             context: app
             dockerfile: Dockerfile-ui
         ports:
             - "3000:3000"
-        container_name: react-ui
         stdin_open: true
         volumes:
             - ./app:/usr/src/app/
 
     db:
+        container_name: db_boilerplate
         image: postgres:15
         restart: always
         environment:
             POSTGRES_PASSWORD: password
             POSTGRES_USER: admin
             POSTGRES_DB: db
+        volumes:
+            -   ./db-data:/var/lib/postgresql/data
+        ports:
+            -   "5432:5432"
+
+
+    nginx_api:
+        container_name: nginx_api
+        image: nginx:latest
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./api:/var/www/app
+            - ./docker/nginx_api/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - php
+
+    php:
+        container_name: api_boilerplate
+        build:
+            context: docker/php
+            args:
+                uid: ${UID}
+                gid: ${GID}
+        volumes:
+            - ./api:/var/www/app
+            # - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+        depends_on:
+            - db
+        ports:
+            -   "9000:9000"
 
