@@ -1,49 +1,34 @@
 import React, {useEffect, useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
+import {Content, Header} from "antd/lib/layout/layout";
+import {Button, Spin} from "antd";
 
 function App() {
 
-  const [apiResult, setApiResult] = useState<string>("loading");
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [apiResult, setApiResult] = useState<string|null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const tryApi = async () => {
+        setApiResult(null);
+        setIsLoading(true);
         try {
             const response = await fetch('http://192.168.233.198/api/v1/test', {mode:'cors'});
             const data = await response.json();
-            setApiResult(data["test"]);
+            setTimeout(() => {
+                setApiResult(data["test"]);
+                setIsLoading(false);
+            }, 1000);
         }
         catch (e) {
             console.log(e)
         }
     }
 
-  useEffect(() => {
-      console.log(apiResult);
-      if(!"loading") {
-          setIsLoading(false);
-      } else {
-          setIsLoading(true);
-      }
-  }, [apiResult])
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <button onClick={tryApi}>FETCH</button>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+        <Button type={"primary"} size={"large"} loading={isLoading} onClick={tryApi}>Fetch Data</Button>
+        <h1>{apiResult}</h1>
     </div>
   );
 }
