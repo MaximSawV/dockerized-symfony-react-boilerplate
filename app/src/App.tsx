@@ -1,8 +1,8 @@
 import React from 'react';
-import KanbanBoard from "./Domain/Kanban/KanbanBoard/components/KanbanBoard";
+import KanbanBoardColumn from "./Domain/Kanban/KanbanBoard/KanbanBoardColumn/KanbanBoardColumn";
 export default function App() {
 
     return (
-        <KanbanBoard />
+        <KanbanBoardColumn />
     )
 }
