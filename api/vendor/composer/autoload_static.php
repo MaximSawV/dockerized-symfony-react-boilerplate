@@ -52,7 +52,7 @@ class ComposerStaticInit9e95af6d6ef31bc0897f73af770f6f1f
         array (
             'Psr\\Log\\' => 8,
             'Psr\\EventDispatcher\\' => 20,
-            'Psr\\Container\\' => 14,
+            'Psr\\KanbanColumn\\' => 14,
             'Psr\\Cache\\' => 10,
             'ProxyManager\\' => 13,
             'PhpParser\\' => 10,
@@ -215,7 +215,7 @@ class ComposerStaticInit9e95af6d6ef31bc0897f73af770f6f1f
         array (
             0 => __DIR__ . '/..' . '/psr/event-dispatcher/src',
         ),
-        'Psr\\Container\\' => 
+        'Psr\\KanbanColumn\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
@@ -313,7 +313,7 @@ class ComposerStaticInit9e95af6d6ef31bc0897f73af770f6f1f
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
-        '©' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
+        'ï¿½' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

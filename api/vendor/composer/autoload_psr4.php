@@ -37,7 +37,7 @@ return array(
     'Symfony\\Bridge\\Doctrine\\' => array($vendorDir . '/symfony/doctrine-bridge'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/src'),
     'Psr\\EventDispatcher\\' => array($vendorDir . '/psr/event-dispatcher/src'),
-    'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
+    'Psr\\KanbanColumn\\' => array($vendorDir . '/psr/container/src'),
     'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),
     'ProxyManager\\' => array($vendorDir . '/friendsofphp/proxy-manager-lts/src/ProxyManager'),
     'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
