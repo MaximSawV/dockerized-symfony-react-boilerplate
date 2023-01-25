@@ -1,19 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import ChessBoard from "./tutorial/ChessBoard";
-import {observe} from "./tutorial/Game";
+import KanbanBoard from "./Kanban/KanbanBoard";
+import {observe} from "./Kanban/StateManager";
+import {KanbanCardProps} from "./Kanban/KanbanCard";
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+
+const rootChess = ReactDOM.createRoot(
+  document.getElementById('rootChess') as HTMLElement
 );
 
 export const ItemTypes = {
-    KNIGHT: 'knight'
+    KNIGHT: 'knight',
+    CARD: 'card',
 }
 
-observe((knightPosition: [x: number, y: number]) =>
-    root.render(
-        <ChessBoard knightPosition={knightPosition} />
-    )
+// observe((knightPosition: [x: number, y: number]) =>
+//     rootChess.render(
+//         <ChessBoard knightPosition={knightPosition} />
+//     )
+// );
+
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement
 );
+
+observe((initialCards: KanbanCardProps[]) => root.render(
+    <KanbanBoard cards={initialCards}/>
+))

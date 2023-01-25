@@ -16,12 +16,17 @@ body {
 }
 
 #root {
-  width: 100%;
-  height: 100%;
+  width: calc(100% - 4em);
+  height: calc(100% - 4em);
   margin: 0;
+  padding: 2em;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.ant-card-body::-webkit-scrollbar {
+  display: none;
 }

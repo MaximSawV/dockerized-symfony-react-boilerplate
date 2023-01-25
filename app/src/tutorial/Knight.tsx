@@ -4,11 +4,8 @@ import {ItemTypes} from "../index";
 
 export default function Knight() {
 
-    const [{isDragging}, drag] = useDrag(() => ({
-        type: ItemTypes.KNIGHT,
-        collect: (monitor) => ({
-            isDragging: monitor.isDragging()
-        })
+    const [, drag] = useDrag(() => ({
+        type: ItemTypes.KNIGHT
     }))
 
     return (
