@@ -110,9 +110,6 @@ export default function KanbanCard(props: KanbanCardProps) {
                     </>
                 )}
             </Card>
-            {isHovered && (
-                <CardContainer columnId={props.columnId} isOver={false} first={false} />
-            )}
         </>
     )
 }

@@ -9,16 +9,17 @@ interface CardContainerProps {
     columnId: number;
     isOver: boolean;
     first: boolean;
+    last: boolean;
 }
 
 export default function CardContainer(props: CardContainerProps) {
 
-    const {columnId, first} = props;
+    const {columnId, first, last} = props;
 
     const [, drop] = useDrop(
         () => ({
             accept: ItemTypes.CARD,
-            drop: (item: DragItem) => moveCard(item.id, columnId, props.isOver, first),
+            drop: (item: DragItem) => moveCard(item.id, columnId, props.isOver, first, last),
         }),
         []
     );

@@ -98,6 +98,7 @@ function compare( a: KanbanCardProps, b: KanbanCardProps ) {
     return 0;
 }
 const testFunction = () => {
+    console.log('test')
     let sortedCards: KanbanCardProps[] = [];
     if (cardsFromBackend.length > 0) {
         sortedCards = cardsFromBackend.sort(compare);
@@ -106,12 +107,11 @@ const testFunction = () => {
     return sortedCards;
 }
 export let initialCards: KanbanCardProps[] = testFunction();
-console.log(...initialCards);
-
 
 let observer: any = null
 
 function emitChange() {
+    initialCards = initialCards.sort(compare);
     observer(initialCards)
 }
 
@@ -124,7 +124,7 @@ export function observe(o: any) {
     emitChange();
 }
 
-export function moveCard(cardId: number, columnId: number, isOverCard: boolean, first: boolean) {
+export function moveCard(cardId: number, columnId: number, isOverCard: boolean, first: boolean, last: boolean) {
 
     initialCards.forEach((card, index) => {
 
@@ -138,27 +138,24 @@ export function moveCard(cardId: number, columnId: number, isOverCard: boolean, 
                     initialCards[index - 1].order++;
                 }
 
-                initialCards = initialCards.sort(compare);
-
                 emitChange();
             }
 
             if (first) {
+
                 for (let i = 0; i < initialCards.length; i++) {
-                    console.log(initialCards[i].id, card.id)
                     if (initialCards[i].id === card.id) {
                         card.order = 0;
                         console.log(card.order)
                         emitChange();
                         return;
                     }
-                    initialCards[i].order += (i + 1);
+                    initialCards[i].order = (i + 1);
                     emitChange();
-                    console.log(initialCards[i].order)
                 }
             }
 
-            if (!first && !isOverCard) {
+            if (last) {
                 if (index > 0) {
                     card.order = 1 + initialCards[index - 1].order;
                     for (let i = index; i >= 0; i--) {

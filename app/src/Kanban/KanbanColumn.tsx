@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Card} from "antd";
 import {css} from "@emotion/css";
-import KanbanCard, {DragItem, KanbanCardProps} from "./KanbanCard";
+import KanbanCard, {KanbanCardProps} from "./KanbanCard";
 import CardContainer from "./CardContainer";
 import {useDrop} from "react-dnd";
 import {ItemTypes} from "../index";
-import {moveCard} from "./StateManager";
+import {v4 as uuidv4} from 'uuid';
 
 export interface KanbanColumnProps {
     id: number;
@@ -44,17 +44,20 @@ export default function KanbanColumn(props: KanbanColumnProps) {
                 cards.map((card, index) => {
 
                     return (
-                        <KanbanCard
-                            key={'card_' + card.id}
-                            id={card.id}
-                            title={card.title}
-                            description={card.description}
-                            content={card.content}
-                            order={id}
-                            columnId={card.columnId}
-                            createdBy={card.createdBy}
-                            assignedTo={card.assignedTo}
-                        />
+                        <>
+                            {isOver && (index > 0) && (<CardContainer key={'container_'+ uuidv4()} columnId={id} last={false} first={false} isOver />)}
+                            <KanbanCard
+                                key={'card_' + card.id}
+                                id={card.id}
+                                title={card.title}
+                                description={card.description}
+                                content={card.content}
+                                order={id}
+                                columnId={card.columnId}
+                                createdBy={card.createdBy}
+                                assignedTo={card.assignedTo}
+                            />
+                        </>
                     )
                 })
             )
@@ -73,17 +76,18 @@ export default function KanbanColumn(props: KanbanColumnProps) {
             `}
             bodyStyle={{width: '350px', height: '1000px', maxHeight: '1000px', overflowY: 'auto'}}
         >
-            {isOver && (cards.length < 1) && (
-                <CardContainer key={'container_1'+id} columnId={id} isOver={false} first />
+            {isOver && (cards.length === 0) && (
+                <CardContainer key={'container_'+ uuidv4()} columnId={id} isOver={false} last={false} first />
             )}
 
             {isOver && (cards.length > 0) && (
-                <CardContainer key={'container_2'+id} columnId={id} isOver={false} first={true} />
+                <CardContainer key={'container_'+ uuidv4()} columnId={id} isOver={false} last={false} first />
             )}
+
             {renderCards()}
 
-            {isOver && (cards.length > 0) && (
-                <CardContainer key={'container_3'+id} columnId={id} isOver={false} first={false} />
+            {isOver && (cards.length > 1) && (
+                <CardContainer key={'container_'+ uuidv4()} columnId={id} isOver={false} first={false} last />
             )}
 
         </Card>
