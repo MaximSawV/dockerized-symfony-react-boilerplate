@@ -4,12 +4,12 @@ import {AntDesignOutlined} from "@ant-design/icons";
 const cardsFromBackend: KanbanCardProps[] = [
 
     {
-        id: 1,
-        title: 'Card 2',
-        description: '2nd Card',
+        id: 0,
+        title: 'Card 1',
+        description: '1st Card',
         content: 'Foo Baar',
         columnId: 0,
-        containerId: 0,
+        order: 0,
         createdBy: {
             name: 'ADMIN',
             acronym: 'ADM',
@@ -35,12 +35,37 @@ const cardsFromBackend: KanbanCardProps[] = [
         ]
     },
     {
-        id: 0,
-        title: 'Card 1',
-        description: '1st Card',
+        id: 1,
+        title: 'Card 2',
+        description: '2nd Card',
         content: 'Foo Baar',
         columnId: 0,
-        containerId: 1,
+        order: 1,
+        createdBy: {
+            name: 'John Wick',
+            acronym: 'JK',
+            color: '#5fa0ff',
+        },
+        assignedTo: [
+            {
+                name: 'Spitzkopf Larry',
+                acronym: 'SKL',
+                color: '#00ff82'
+            },
+            {
+                name: 'Dreckiger Dan',
+                acronym: 'DD',
+                color: '#925917'
+            }
+        ]
+    },
+    {
+        id: 2,
+        title: 'Card 3',
+        description: '3rd Card',
+        content: 'Foo Baar',
+        columnId: 0,
+        order: 2,
         createdBy: {
             name: 'John Wick',
             acronym: 'JK',
@@ -62,15 +87,12 @@ const cardsFromBackend: KanbanCardProps[] = [
 ];
 
 function compare( a: KanbanCardProps, b: KanbanCardProps ) {
-    if ( a.containerId && b.containerId ){
-        console.log(a,b, "PANDA")
-        if ( a.containerId < b.containerId ){
-            return -1;
-        }
+    if ( a.order < b.order ){
+        return -1;
+    }
 
-        if ( a.containerId > b.containerId ){
-            return +1;
-        }
+    if ( a.order > b.order ){
+        return +1;
     }
 
     return 0;
@@ -83,7 +105,8 @@ const testFunction = () => {
 
     return sortedCards;
 }
-export const initialCards: KanbanCardProps[] = testFunction();
+export let initialCards: KanbanCardProps[] = testFunction();
+console.log(...initialCards);
 
 
 let observer: any = null
@@ -101,24 +124,55 @@ export function observe(o: any) {
     emitChange();
 }
 
-export function moveCard(cardId: number, columnId: number, containerId: number) {
+export function moveCard(cardId: number, columnId: number, isOverCard: boolean, first: boolean) {
 
-    initialCards.forEach((card) => {
-        if (card.id === cardId) {
-
-            if (card.containerId >= containerId + 1) {
-                card.containerId ++;
-            }
-
-        }
-    })
-
-    initialCards.forEach((card) => {
+    initialCards.forEach((card, index) => {
 
         if (card.id === cardId) {
-            card.containerId = containerId;
             card.columnId = columnId;
             emitChange();
+
+            if (isOverCard) {
+                if (index > 0) {
+                    card.order = initialCards[index - 1].order;
+                    initialCards[index - 1].order++;
+                }
+
+                initialCards = initialCards.sort(compare);
+
+                emitChange();
+            }
+
+            if (first) {
+                for (let i = 0; i < initialCards.length; i++) {
+                    console.log(initialCards[i].id, card.id)
+                    if (initialCards[i].id === card.id) {
+                        card.order = 0;
+                        console.log(card.order)
+                        emitChange();
+                        return;
+                    }
+                    initialCards[i].order += (i + 1);
+                    emitChange();
+                    console.log(initialCards[i].order)
+                }
+            }
+
+            if (!first && !isOverCard) {
+                if (index > 0) {
+                    card.order = 1 + initialCards[index - 1].order;
+                    for (let i = index; i >= 0; i--) {
+                        initialCards[i].order ++;
+                    }
+
+                    for (let i = index; i < initialCards.length; i++) {
+                        initialCards[i].order ++;
+                    }
+                } else {
+                    card.order = initialCards.length;
+                }
+                emitChange();
+            }
         }
     })
 }

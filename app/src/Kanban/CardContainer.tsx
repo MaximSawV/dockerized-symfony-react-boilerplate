@@ -1,54 +1,37 @@
-import React, {ReactNode} from 'react';
+import React from 'react';
 import {moveCard} from "./StateManager";
-import KanbanCard, {DragItem, KanbanCardProps} from "./KanbanCard";
+import {DragItem} from "./KanbanCard";
 import {useDrop} from "react-dnd";
 import {ItemTypes} from '..';
 import {css} from "@emotion/css";
 
 interface CardContainerProps {
-    id: number;
-    card: KanbanCardProps | null;
     columnId: number;
-    show: boolean;
+    isOver: boolean;
+    first: boolean;
 }
 
 export default function CardContainer(props: CardContainerProps) {
 
-    const {card, id, columnId, show} = props;
+    const {columnId, first} = props;
 
-    const [{isOver}, drop] = useDrop(
+    const [, drop] = useDrop(
         () => ({
             accept: ItemTypes.CARD,
-            drop: (item: DragItem) => moveCard(item.id, columnId, id + 1),
-            collect: monitor => ({
-                isOver: monitor.isOver(),
-            }),
+            drop: (item: DragItem) => moveCard(item.id, columnId, props.isOver, first),
         }),
-        [id]
+        []
     );
 
     return (
         <div ref={drop}
              className={css`
-               height: ${card ? 'fit-content' : '50px'};
+               height: 50px;
                width: 300px;
                background: #6E6E6E;
-               opacity: ${card && !show ? 0.5 : 1};
+               opacity: 0.5;
                border-radius: 20px
              `}>
-            {card && (
-                <KanbanCard
-                    key={'card_'+id}
-                    id={card.id}
-                    title={card.title}
-                    description={card.description}
-                    content={card.content}
-                    containerId={id}
-                    columnId={card.columnId}
-                    createdBy={card.createdBy}
-                    assignedTo={card.assignedTo}
-                />
-            )}
         </div>
     )
 }
