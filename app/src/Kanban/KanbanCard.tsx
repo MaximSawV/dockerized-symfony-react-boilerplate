@@ -13,6 +13,7 @@ export interface KanbanCardProps {
     description: string,
     content: string,
     columnId: number,
+    containerId: number,
     createdBy: Avatar,
     assignedTo: Avatar[],
 }
@@ -69,8 +70,7 @@ export default function KanbanCard(props: KanbanCardProps) {
             ref={drag}
             className={css`
               width: 300px;
-              margin-bottom: 2em;
-              display: ${isDragging ? 'none' : 'block'};
+              opacity: ${isDragging ? 0.5 : 1};
             `}
             actions={isDragging ? [] : [
                 <AppstoreAddOutlined key={"add"}/>,
@@ -78,28 +78,32 @@ export default function KanbanCard(props: KanbanCardProps) {
                 <EditOutlined key={"edit"} onClick={postData}/>
             ]}
         >
-            <Meta
-                title={title}
-                description={description}
-                avatar={
-                    renderAvatar(createdBy, true)
-                }/>
-            <p>{content}</p>
-            <hr/>
-            {assignedTo && (
-                <div>
-                    <p>Assigned to:</p>
-                    <Avatar.Group
-                        maxCount={2}
-                        maxPopoverTrigger="click"
-                        size="small"
-                        maxStyle={{color: '#f56a00', backgroundColor: '#fde3cf', cursor: 'pointer'}}
-                    >
-                        {assignedTo.map((user, index) => {
-                            return renderAvatar(user, false, index);
-                        })}
-                    </Avatar.Group>
-                </div>
+            {!isDragging && (
+                <>
+                    <Meta
+                        title={title}
+                        description={description}
+                        avatar={
+                            renderAvatar(createdBy, true)
+                        }/>
+                    <p>{content}</p>
+                    <hr/>
+                    {assignedTo && (
+                        <div>
+                            <p>Assigned to:</p>
+                            <Avatar.Group
+                                maxCount={2}
+                                maxPopoverTrigger="click"
+                                size="small"
+                                maxStyle={{color: '#f56a00', backgroundColor: '#fde3cf', cursor: 'pointer'}}
+                            >
+                                {assignedTo.map((user, index) => {
+                                    return renderAvatar(user, false, index);
+                                })}
+                            </Avatar.Group>
+                        </div>
+                    )}
+                </>
             )}
         </Card>
     )

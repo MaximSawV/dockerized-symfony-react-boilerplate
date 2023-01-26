@@ -25,5 +25,7 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement
 );
 
 observe((initialCards: KanbanCardProps[]) => root.render(
-    <KanbanBoard cards={initialCards}/>
+    <React.StrictMode>
+        <KanbanBoard cards={initialCards}/>
+    </React.StrictMode>
 ))

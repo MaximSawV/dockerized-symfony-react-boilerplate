@@ -1,7 +1,7 @@
-import {KanbanCardProps} from "./KanbanCard";
+import KanbanCard, {KanbanCardProps} from "./KanbanCard";
 import {ReactNode} from "react";
 import {AntDesignOutlined} from "@ant-design/icons";
-export const initialCards: KanbanCardProps[] = [
+const cardsFromBackend: KanbanCardProps[] = [
 
     {
         id: 1,
@@ -9,6 +9,7 @@ export const initialCards: KanbanCardProps[] = [
         description: '2nd Card',
         content: 'Foo Baar',
         columnId: 0,
+        containerId: 0,
         createdBy: {
             name: 'ADMIN',
             acronym: 'ADM',
@@ -39,6 +40,7 @@ export const initialCards: KanbanCardProps[] = [
         description: '1st Card',
         content: 'Foo Baar',
         columnId: 0,
+        containerId: 1,
         createdBy: {
             name: 'John Wick',
             acronym: 'JK',
@@ -59,6 +61,30 @@ export const initialCards: KanbanCardProps[] = [
     },
 ];
 
+function compare( a: KanbanCardProps, b: KanbanCardProps ) {
+    if ( a.containerId && b.containerId ){
+        console.log(a,b, "PANDA")
+        if ( a.containerId < b.containerId ){
+            return -1;
+        }
+
+        if ( a.containerId > b.containerId ){
+            return +1;
+        }
+    }
+
+    return 0;
+}
+const testFunction = () => {
+    let sortedCards: KanbanCardProps[] = [];
+    if (cardsFromBackend.length > 0) {
+        sortedCards = cardsFromBackend.sort(compare);
+    }
+
+    return sortedCards;
+}
+export const initialCards: KanbanCardProps[] = testFunction();
+
 
 let observer: any = null
 
@@ -75,10 +101,22 @@ export function observe(o: any) {
     emitChange();
 }
 
-export function moveCard(cardId: number, columnId: number) {
+export function moveCard(cardId: number, columnId: number, containerId: number) {
 
     initialCards.forEach((card) => {
         if (card.id === cardId) {
+
+            if (card.containerId >= containerId + 1) {
+                card.containerId ++;
+            }
+
+        }
+    })
+
+    initialCards.forEach((card) => {
+
+        if (card.id === cardId) {
+            card.containerId = containerId;
             card.columnId = columnId;
             emitChange();
         }

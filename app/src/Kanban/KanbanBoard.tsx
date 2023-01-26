@@ -26,7 +26,7 @@ const Columns: KanbanColumnProps[] = [
 function renderColumn(cards: KanbanCardProps[]) {
 
     return (
-        Columns.map((column) => {
+        Columns.map((column, index) => {
 
             let columnCards: KanbanCardProps[] = []
 
@@ -37,7 +37,7 @@ function renderColumn(cards: KanbanCardProps[]) {
             })
 
             return (
-                <KanbanColumn key={column.id + 'column'} id={column.id} title={column.title} cards={columnCards} />
+                <KanbanColumn key={'column_'+index} id={column.id} title={column.title} cards={columnCards} />
             )
         })
     )
