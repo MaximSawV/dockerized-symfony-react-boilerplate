@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Card} from "antd";
 import {css} from "@emotion/css";
-import KanbanCard, {DragItem, KanbanCardProps} from "./KanbanCard";
+import KanbanCard, {KanbanCardProps} from "./KanbanCard";
 import CardContainer from "./CardContainer";
 import {useDrop} from "react-dnd";
 import {ItemTypes} from "../index";
 import {AppstoreAddOutlined, DeleteOutlined} from "@ant-design/icons";
-import {deleteCards, generateCards, moveCard} from "./StateManager";
+import {deleteCards, generateCards} from "./StateManager";
 import DropSpace from "./DropSpace";
 
 export interface KanbanColumnProps {
@@ -18,16 +18,6 @@ export interface KanbanColumnProps {
 export default function KanbanColumn(props: KanbanColumnProps) {
 
     const {id, title, cards} = props
-
-    const [firstCard, setFirstCard] = useState<boolean>(true)
-
-    useEffect(() => {
-        cards.forEach((card) => {
-            if (card.columnId === id) {
-                setFirstCard(false);
-            }
-        })
-    })
 
     const [{isOver}, drop] = useDrop(
         () => ({

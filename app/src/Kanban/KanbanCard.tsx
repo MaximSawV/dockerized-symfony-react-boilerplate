@@ -1,4 +1,4 @@
-import React, {ReactNode, useRef, useState} from 'react';
+import React, {ReactNode} from 'react';
 import {Card} from "antd";
 import {EditOutlined} from "@ant-design/icons";
 import {css} from "@emotion/css";
@@ -37,7 +37,7 @@ export default function KanbanCard(props: KanbanCardProps) {
             isDragging: monitor.isDragging()
         }),
     }));
-    const postData = (test: any) => {
+    const postData = () => {
         initialCards.forEach((card) => {
             if (card.id === id) {
                 console.log(card);

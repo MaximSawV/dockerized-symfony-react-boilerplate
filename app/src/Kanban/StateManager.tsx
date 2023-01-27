@@ -3,7 +3,6 @@ import {v4} from "uuid";
 
 const cardsFromBackend: KanbanCardProps[] = [];
 
-
 export function deleteCards(column: number) {
     initialCards = initialCards.filter(card => card.columnId !== column);
 
