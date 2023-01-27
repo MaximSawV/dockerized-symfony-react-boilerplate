@@ -1,16 +1,18 @@
 import React, {ReactNode} from 'react';
 import {Card} from "antd";
-import {EditOutlined} from "@ant-design/icons";
+import {DeleteOutlined} from "@ant-design/icons";
 import {css} from "@emotion/css";
 import {useDrag} from "react-dnd";
 import {ItemTypes} from "../index";
-import {initialCards} from "./StateManager";
+import {deleteCard} from "./StateManager";
 
 export interface KanbanCardProps {
     id: string,
     title: string,
-    columnId: number,
+    columnId: string,
     order: number,
+
+    onDelete?: () => void,
 }
 
 export interface Avatar {
@@ -37,13 +39,6 @@ export default function KanbanCard(props: KanbanCardProps) {
             isDragging: monitor.isDragging()
         }),
     }));
-    const postData = () => {
-        initialCards.forEach((card) => {
-            if (card.id === id) {
-                console.log(card);
-            }
-        })
-    }
 
     return (
         <>
@@ -56,7 +51,7 @@ export default function KanbanCard(props: KanbanCardProps) {
               margin: 1em 0 1em 0;
             `}
                 actions={[
-                    <EditOutlined key={"edit"} onClick={postData}/>
+                    <DeleteOutlined key={"edit"} onClick={props.onDelete}/>
                 ]}
             >
             </Card>

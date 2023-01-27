@@ -1,24 +1,28 @@
-import React from 'react';
-import {Card} from "antd";
+import React, {useEffect, useState} from 'react';
+import {Button, Card} from "antd";
 import {css} from "@emotion/css";
 import KanbanColumn, {KanbanColumnProps} from "./KanbanColumn";
 import {KanbanCardProps} from "./KanbanCard";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
+import {AppstoreAddOutlined} from "@ant-design/icons";
+import Title from "antd/lib/typography/Title";
+import KanbanForm from "./KanbanForm";
+import {v4} from "uuid";
 
-const Columns: KanbanColumnProps[] = [
+export const Columns: KanbanColumnProps[] = [
     {
-        id: 0,
+        id: v4(),
         title: 'Todo',
         cards: []
     },
     {
-        id: 1,
+        id: v4(),
         title: 'Doing',
         cards: []
     },
     {
-        id: 2,
+        id: v4(),
         title: 'Done',
         cards: []
     },
@@ -48,15 +52,34 @@ interface KanbanBordProps {
 }
 export default function KanbanBoard(props: KanbanBordProps) {
 
+    const [formIsOpen, setFormIsOpen] = useState<boolean>(false);
+    const toggleForm = () => {
+        setFormIsOpen(!formIsOpen);
+    }
+
+    useEffect(() => {
+        setFormIsOpen(false);
+    }, [Columns])
+
     return (
-        <DndProvider backend={HTML5Backend}>
-            <Card
-                title={"Board 1"}
-                className={css`height: calc(100% - 100px);`}
-                bodyStyle={{display: 'flex', flexDirection: 'row'}}
-            >
-                {renderColumn(props.cards)}
-            </Card>
-        </DndProvider>
+        <>
+            <DndProvider backend={HTML5Backend}>
+                <Card
+                    title={
+                        <div style={{display: 'flex', alignItems: 'center'}}>
+                            <Title>Card 1</Title>
+                            <Button onClick={toggleForm} size={'large'} style={{right: '3em', position: 'absolute'}} icon={<AppstoreAddOutlined/>}></Button>
+                        </div>
+                    }
+                    className={css`height: calc(100% - 100px);`}
+                    bodyStyle={{display: 'flex', flexDirection: 'row'}}
+                >
+                    {renderColumn(props.cards)}
+                </Card>
+            </DndProvider>
+            {formIsOpen && (
+                <KanbanForm toggleForm={toggleForm} />
+            )}
+        </>
     )
 }

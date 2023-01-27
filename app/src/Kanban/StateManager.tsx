@@ -2,13 +2,25 @@ import {KanbanCardProps} from "./KanbanCard";
 import {v4} from "uuid";
 
 const cardsFromBackend: KanbanCardProps[] = [];
+export let initialCards: KanbanCardProps[] = sort();
 
-export function deleteCards(column: number) {
+
+export function addCard(card: KanbanCardProps) {
+    initialCards.push(card);
+    emitChange();
+}
+
+export function deleteCard(card: KanbanCardProps) {
+    console.log(card);
+    initialCards.splice(initialCards.indexOf(card), 1);
+    emitChange();
+}
+export function deleteCards(column: string) {
     initialCards = initialCards.filter(card => card.columnId !== column);
 
     emitChange();
 }
-export function generateCards(number: number, column: number) {
+export function generateCards(number: number, column: string) {
 
     for (let i = 0; i < number; i++) {
         initialCards.push(
@@ -43,7 +55,6 @@ function sort() {
 
     return sortedCards;
 }
-export let initialCards: KanbanCardProps[] = sort();
 
 let observer: any = null
 
@@ -86,7 +97,7 @@ function placeCardLast(index: number, card: KanbanCardProps) {
     initialCards.push(card);
 }
 
-export function moveCard(movingCard: string, columnId: number, method: 'over' | 'last' | 'first', movedCard: KanbanCardProps|null ) {
+export function moveCard(movingCard: string, columnId: string, method: 'over' | 'last' | 'first', movedCard: KanbanCardProps|null ) {
 
     initialCards.forEach((card, index) => {
 

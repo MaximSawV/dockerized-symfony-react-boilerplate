@@ -6,7 +6,7 @@ import {ItemTypes} from '..';
 import {css} from "@emotion/css";
 
 interface CardContainerProps {
-    columnId: number;
+    columnId: string;
     method: 'over' | 'last' | 'first';
     movedCard: KanbanCardProps|null;
 }

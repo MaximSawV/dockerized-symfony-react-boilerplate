@@ -5,7 +5,7 @@ import {DragItem} from "./KanbanCard";
 import {moveCard} from "./StateManager";
 
 interface props {
-    columnId: number
+    columnId: string
 }
 export default function DropSpace(props: props) {
 
