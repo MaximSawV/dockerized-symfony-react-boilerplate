@@ -1,22 +1,16 @@
 import React, {ReactNode, useRef, useState} from 'react';
-import {Avatar, Card, Tooltip} from "antd";
-import Meta from "antd/lib/card/Meta";
-import {AppstoreAddOutlined, DeleteOutlined, EditOutlined} from "@ant-design/icons";
+import {Card} from "antd";
+import {EditOutlined} from "@ant-design/icons";
 import {css} from "@emotion/css";
-import {useDrag, useDrop} from "react-dnd";
+import {useDrag} from "react-dnd";
 import {ItemTypes} from "../index";
-import {initialCards, moveCard} from "./StateManager";
-import CardContainer from "./CardContainer";
+import {initialCards} from "./StateManager";
 
 export interface KanbanCardProps {
-    id: number,
+    id: string,
     title: string,
-    description: string,
-    content: string,
     columnId: number,
     order: number,
-    createdBy: Avatar,
-    assignedTo: Avatar[],
 }
 
 export interface Avatar {
@@ -28,17 +22,13 @@ export interface Avatar {
 }
 
 export interface DragItem {
-    id: number,
+    id: string,
     index: number
 }
 
 export default function KanbanCard(props: KanbanCardProps) {
 
-    const ref = useRef<HTMLDivElement>(null);
-
-    const {id, title, description, content, createdBy, assignedTo} = props;
-
-    const [isHovered, setIsHovered] = useState<boolean>(false);
+    const {id, title} = props;
 
     const [{isDragging}, drag] = useDrag(() => ({
         type: ItemTypes.CARD,
@@ -47,19 +37,6 @@ export default function KanbanCard(props: KanbanCardProps) {
             isDragging: monitor.isDragging()
         }),
     }));
-    const renderAvatar = (avatar: Avatar, creator: boolean, index?: number) => {
-        return (
-            <Tooltip key={index ? index + 'user' : null} title={avatar.name} placement={'top'}>
-                <Avatar
-                    size={creator ? 'large' : 'small'}
-                    shape={creator ? 'circle' : 'square'}
-                    style={{backgroundColor: avatar.color}}
-                    icon={avatar.icon}
-                >{avatar.icon ? null : avatar.acronym}</Avatar>
-            </Tooltip>
-        )
-    }
-
     const postData = (test: any) => {
         initialCards.forEach((card) => {
             if (card.id === id) {
@@ -71,44 +48,17 @@ export default function KanbanCard(props: KanbanCardProps) {
     return (
         <>
             <Card
+                title={title}
                 ref={drag}
                 className={css`
               width: 300px;
               opacity: ${isDragging ? 0.5 : 1};
+              margin: 1em 0 1em 0;
             `}
-                actions={isDragging ? [] : [
-                    <AppstoreAddOutlined key={"add"}/>,
-                    <DeleteOutlined key={"delete"}/>,
+                actions={[
                     <EditOutlined key={"edit"} onClick={postData}/>
                 ]}
             >
-                {!isDragging && (
-                    <>
-                        <Meta
-                            title={title}
-                            description={description}
-                            avatar={
-                                renderAvatar(createdBy, true)
-                            }/>
-                        <p>{content}</p>
-                        <hr/>
-                        {assignedTo && (
-                            <div>
-                                <p>Assigned to:</p>
-                                <Avatar.Group
-                                    maxCount={2}
-                                    maxPopoverTrigger="click"
-                                    size="small"
-                                    maxStyle={{color: '#f56a00', backgroundColor: '#fde3cf', cursor: 'pointer'}}
-                                >
-                                    {assignedTo.map((user, index) => {
-                                        return renderAvatar(user, false, index);
-                                    })}
-                                </Avatar.Group>
-                            </div>
-                        )}
-                    </>
-                )}
             </Card>
         </>
     )

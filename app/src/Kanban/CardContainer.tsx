@@ -1,25 +1,28 @@
 import React from 'react';
 import {moveCard} from "./StateManager";
-import {DragItem} from "./KanbanCard";
+import {DragItem, KanbanCardProps} from "./KanbanCard";
 import {useDrop} from "react-dnd";
 import {ItemTypes} from '..';
 import {css} from "@emotion/css";
 
 interface CardContainerProps {
     columnId: number;
-    isOver: boolean;
-    first: boolean;
-    last: boolean;
+    method: 'over' | 'last' | 'first';
+    movedCard: KanbanCardProps|null;
 }
 
 export default function CardContainer(props: CardContainerProps) {
 
-    const {columnId, first, last} = props;
+    const {columnId, method, movedCard} = props;
 
-    const [, drop] = useDrop(
+    const [ {isOver}, drop] = useDrop(
         () => ({
             accept: ItemTypes.CARD,
-            drop: (item: DragItem) => moveCard(item.id, columnId, props.isOver, first, last),
+            collect: monitor => ({
+                isOver: monitor.isOver(),
+            }),
+            drop: (item: DragItem) => moveCard(item.id, columnId, method, movedCard),
+
         }),
         []
     );
@@ -27,11 +30,10 @@ export default function CardContainer(props: CardContainerProps) {
     return (
         <div ref={drop}
              className={css`
-               height: 50px;
+               height: 3em;
                width: 300px;
-               background: #6E6E6E;
-               opacity: 0.5;
-               border-radius: 20px
+               background-color: #6E6E6E;
+               opacity: ${isOver ? 0.3 : 0};
              `}>
         </div>
     )

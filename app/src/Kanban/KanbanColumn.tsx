@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {Card} from "antd";
 import {css} from "@emotion/css";
-import KanbanCard, {KanbanCardProps} from "./KanbanCard";
+import KanbanCard, {DragItem, KanbanCardProps} from "./KanbanCard";
 import CardContainer from "./CardContainer";
 import {useDrop} from "react-dnd";
 import {ItemTypes} from "../index";
-import {v4 as uuidv4} from 'uuid';
+import {AppstoreAddOutlined, DeleteOutlined} from "@ant-design/icons";
+import {deleteCards, generateCards, moveCard} from "./StateManager";
+import DropSpace from "./DropSpace";
 
 export interface KanbanColumnProps {
     id: number;
@@ -33,7 +35,6 @@ export default function KanbanColumn(props: KanbanColumnProps) {
             collect: monitor => ({
                 isOver: monitor.isOver(),
             }),
-            //drop: (item: DragItem) => moveCard(item.id, id, false, firstCard),
         }),
         [id]
     );
@@ -45,23 +46,29 @@ export default function KanbanColumn(props: KanbanColumnProps) {
 
                     return (
                         <>
-                            {isOver && (index > 0) && (<CardContainer key={'container_'+ uuidv4()} columnId={id} last={false} first={false} isOver />)}
+                            {isOver && (
+                                <CardContainer key={'AlwaysOver'+index} columnId={id} method={(index === 0) ? 'first' : 'over'} movedCard={card}/>
+                            )}
                             <KanbanCard
                                 key={'card_' + card.id}
                                 id={card.id}
                                 title={card.title}
-                                description={card.description}
-                                content={card.content}
                                 order={id}
                                 columnId={card.columnId}
-                                createdBy={card.createdBy}
-                                assignedTo={card.assignedTo}
                             />
                         </>
                     )
                 })
             )
         }
+    }
+
+    const generateCardsInColumn = () => {
+        generateCards(100, id);
+    }
+
+    const deleteCardsInColumn = () => {
+        deleteCards(id);
     }
 
     return (
@@ -74,22 +81,17 @@ export default function KanbanColumn(props: KanbanColumnProps) {
               margin: 20px;
               background-color: rgba(175, 193, 199, 0.75);
             `}
-            bodyStyle={{width: '350px', height: '1000px', maxHeight: '1000px', overflowY: 'auto'}}
+            bodyStyle={{width: '350px', height: '900px', maxHeight: '1000px', overflowY: 'auto'}}
+            actions={[
+                <AppstoreAddOutlined key={"add"} onClick={generateCardsInColumn}/>,
+                <DeleteOutlined key={"delete"} onClick={deleteCardsInColumn}/>,
+            ]}
         >
-            {isOver && (cards.length === 0) && (
-                <CardContainer key={'container_'+ uuidv4()} columnId={id} isOver={false} last={false} first />
-            )}
-
-            {isOver && (cards.length > 0) && (
-                <CardContainer key={'container_'+ uuidv4()} columnId={id} isOver={false} last={false} first />
-            )}
-
             {renderCards()}
-
-            {isOver && (cards.length > 1) && (
-                <CardContainer key={'container_'+ uuidv4()} columnId={id} isOver={false} first={false} last />
+            {isOver && cards.length === 0 && (
+                <CardContainer key={'AlwaysBottom'} columnId={id} method={'first'} movedCard={null}/>
             )}
-
+            <DropSpace columnId={id} />
         </Card>
     )
 }

@@ -1,90 +1,29 @@
-import KanbanCard, {KanbanCardProps} from "./KanbanCard";
-import {ReactNode} from "react";
-import {AntDesignOutlined} from "@ant-design/icons";
-const cardsFromBackend: KanbanCardProps[] = [
+import {KanbanCardProps} from "./KanbanCard";
+import {v4} from "uuid";
 
-    {
-        id: 0,
-        title: 'Card 1',
-        description: '1st Card',
-        content: 'Foo Baar',
-        columnId: 0,
-        order: 0,
-        createdBy: {
-            name: 'ADMIN',
-            acronym: 'ADM',
-            color: '#5fa0ff',
-            icon: <AntDesignOutlined />
-        },
-        assignedTo: [
+const cardsFromBackend: KanbanCardProps[] = [];
+
+
+export function deleteCards(column: number) {
+    initialCards = initialCards.filter(card => card.columnId !== column);
+
+    emitChange();
+}
+export function generateCards(number: number, column: number) {
+
+    for (let i = 0; i < number; i++) {
+        initialCards.push(
             {
-                name: 'John Wick',
-                acronym: 'JK',
-                color: '#5fa0ff'
-            },
-            {
-                name: 'Dreckiger Dan',
-                acronym: 'DD',
-                color: '#925917'
-            },
-            {
-                name: 'Spitzkopf Larry',
-                acronym: 'SKL',
-                color: '#00ff82'
-            },
-        ]
-    },
-    {
-        id: 1,
-        title: 'Card 2',
-        description: '2nd Card',
-        content: 'Foo Baar',
-        columnId: 0,
-        order: 1,
-        createdBy: {
-            name: 'John Wick',
-            acronym: 'JK',
-            color: '#5fa0ff',
-        },
-        assignedTo: [
-            {
-                name: 'Spitzkopf Larry',
-                acronym: 'SKL',
-                color: '#00ff82'
-            },
-            {
-                name: 'Dreckiger Dan',
-                acronym: 'DD',
-                color: '#925917'
-            }
-        ]
-    },
-    {
-        id: 2,
-        title: 'Card 3',
-        description: '3rd Card',
-        content: 'Foo Baar',
-        columnId: 0,
-        order: 2,
-        createdBy: {
-            name: 'John Wick',
-            acronym: 'JK',
-            color: '#5fa0ff',
-        },
-        assignedTo: [
-            {
-                name: 'Spitzkopf Larry',
-                acronym: 'SKL',
-                color: '#00ff82'
-            },
-            {
-                name: 'Dreckiger Dan',
-                acronym: 'DD',
-                color: '#925917'
-            }
-        ]
-    },
-];
+                id: v4(),
+                title: 'Card Nr: ' + (initialCards.length + 1),
+                columnId: column,
+                order: initialCards.length + i,
+            } as KanbanCardProps
+        )
+    }
+
+    emitChange();
+}
 
 function compare( a: KanbanCardProps, b: KanbanCardProps ) {
     if ( a.order < b.order ){
@@ -97,8 +36,7 @@ function compare( a: KanbanCardProps, b: KanbanCardProps ) {
 
     return 0;
 }
-const testFunction = () => {
-    console.log('test')
+function sort() {
     let sortedCards: KanbanCardProps[] = [];
     if (cardsFromBackend.length > 0) {
         sortedCards = cardsFromBackend.sort(compare);
@@ -106,7 +44,7 @@ const testFunction = () => {
 
     return sortedCards;
 }
-export let initialCards: KanbanCardProps[] = testFunction();
+export let initialCards: KanbanCardProps[] = sort();
 
 let observer: any = null
 
@@ -124,52 +62,58 @@ export function observe(o: any) {
     emitChange();
 }
 
-export function moveCard(cardId: number, columnId: number, isOverCard: boolean, first: boolean, last: boolean) {
+function realign() {
+    for (let i = 0; i < initialCards.length; i++) {
+        initialCards[i].order = i;
+    }
+}
+
+function placeCardOver(card: KanbanCardProps, index: number, movedCard: KanbanCardProps) {
+
+    const moveIndex = initialCards.indexOf(movedCard);
+    initialCards.splice(index, 1);
+    initialCards.splice(moveIndex, 0, card);
+}
+
+function placeCardFirst(index: number, card: KanbanCardProps) {
+
+    initialCards.splice(index, 1);
+    initialCards.unshift(card)
+}
+
+function placeCardLast(index: number, card: KanbanCardProps) {
+
+    initialCards.splice(index, 1);
+    initialCards.push(card);
+}
+
+export function moveCard(movingCard: string, columnId: number, method: 'over' | 'last' | 'first', movedCard: KanbanCardProps|null ) {
 
     initialCards.forEach((card, index) => {
 
-        if (card.id === cardId) {
-            card.columnId = columnId;
+        if (card.id === movingCard) {
+
+            if (card.columnId !== columnId) {
+                card.columnId = columnId;
+                card.order = initialCards.length - 1;
+            }
+
+            switch (method) {
+                case 'first':
+                    placeCardFirst(index, card);
+                    break;
+                case 'last':
+                    placeCardLast(index, card);
+                    break;
+                case 'over':
+                    if (movedCard) {
+                        placeCardOver(card, index, movedCard);
+                    }
+                    break;
+            }
+
+            realign();
             emitChange();
-
-            if (isOverCard) {
-                if (index > 0) {
-                    card.order = initialCards[index - 1].order;
-                    initialCards[index - 1].order++;
-                }
-
-                emitChange();
-            }
-
-            if (first) {
-
-                for (let i = 0; i < initialCards.length; i++) {
-                    if (initialCards[i].id === card.id) {
-                        card.order = 0;
-                        console.log(card.order)
-                        emitChange();
-                        return;
-                    }
-                    initialCards[i].order = (i + 1);
-                    emitChange();
-                }
-            }
-
-            if (last) {
-                if (index > 0) {
-                    card.order = 1 + initialCards[index - 1].order;
-                    for (let i = index; i >= 0; i--) {
-                        initialCards[i].order ++;
-                    }
-
-                    for (let i = index; i < initialCards.length; i++) {
-                        initialCards[i].order ++;
-                    }
-                } else {
-                    card.order = initialCards.length;
-                }
-                emitChange();
-            }
         }
     })
 }
