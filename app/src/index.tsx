@@ -1,9 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import KanbanBoard from "./Kanban/KanbanBoard";
-import {observe} from "./Kanban/StateManager";
-import {KanbanCardProps} from "./Kanban/KanbanCard";
+import KanbanBoard from "./Kanban/React-BDnD/KanbanBoard";
 
 export const ItemTypes = {
     CARD: 'card',
@@ -12,8 +10,12 @@ export const ItemTypes = {
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement
 );
 
-observe((initialCards: KanbanCardProps[]) => root.render(
-    <React.StrictMode>
-        <KanbanBoard cards={initialCards}/>
-    </React.StrictMode>
-))
+// observe((initialCards: KanbanCardProps[]) => root.render(
+//     <React.StrictMode>
+//         <KanbanBoard cards={initialCards}/>
+//     </React.StrictMode>
+// ))
+
+root.render(
+    <KanbanBoard />
+)

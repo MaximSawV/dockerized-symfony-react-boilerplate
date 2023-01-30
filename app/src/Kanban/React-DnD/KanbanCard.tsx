@@ -1,26 +1,10 @@
-import React, {ReactNode} from 'react';
+import React from 'react';
 import {Card} from "antd";
 import {DeleteOutlined} from "@ant-design/icons";
 import {css} from "@emotion/css";
 import {useDrag} from "react-dnd";
-import {ItemTypes} from "../index";
-
-export interface KanbanCardProps {
-    id: string,
-    title: string,
-    columnId: string,
-    order: number,
-
-    onDelete?: () => void,
-}
-
-export interface Avatar {
-    name: string;
-    acronym: string;
-    color: string;
-    icon?: ReactNode;
-
-}
+import {ItemTypes} from "../../index";
+import {KanbanCardProps} from "../lib/resources/kanbanProps";
 
 export interface DragItem {
     id: string,

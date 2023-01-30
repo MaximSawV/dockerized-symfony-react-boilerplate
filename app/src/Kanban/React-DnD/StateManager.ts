@@ -1,5 +1,5 @@
-import {KanbanCardProps} from "./KanbanCard";
 import {v4} from "uuid";
+import {KanbanCardProps} from "../lib/resources/kanbanProps";
 
 const cardsFromBackend: KanbanCardProps[] = [];
 export let initialCards: KanbanCardProps[] = sort();
@@ -36,11 +36,11 @@ export function generateCards(number: number, column: string) {
 }
 
 function compare( a: KanbanCardProps, b: KanbanCardProps ) {
-    if ( a.order < b.order ){
+    if ( a.order! < b.order! ){
         return -1;
     }
 
-    if ( a.order > b.order ){
+    if ( a.order! > b.order! ){
         return +1;
     }
 

@@ -1,33 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Button, Card} from "antd";
 import {css} from "@emotion/css";
-import KanbanColumn, {KanbanColumnProps} from "./KanbanColumn";
-import {KanbanCardProps} from "./KanbanCard";
+import KanbanColumn from "./KanbanColumn";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
 import {AppstoreAddOutlined} from "@ant-design/icons";
 import Title from "antd/lib/typography/Title";
 import KanbanForm from "./KanbanForm";
-import {v4} from "uuid";
-
-export const Columns: KanbanColumnProps[] = [
-    {
-        id: v4(),
-        title: 'Todo',
-        cards: []
-    },
-    {
-        id: v4(),
-        title: 'Doing',
-        cards: []
-    },
-    {
-        id: v4(),
-        title: 'Done',
-        cards: []
-    },
-];
-
+import {Columns} from "../lib/resources/columns";
+import {KanbanCardProps, KanbanColumnProps} from "../lib/resources/kanbanProps";
 interface KanbanBordProps {
     cards: KanbanCardProps[];
 }
@@ -38,10 +19,6 @@ export default function KanbanBoard(props: KanbanBordProps) {
     const toggleForm = () => {
         setFormIsOpen(!formIsOpen);
     }
-
-    useEffect(() => {
-        console.log(columns)
-    }, [columns])
 
     const renderColumn = (cards: KanbanCardProps[]) => {
 

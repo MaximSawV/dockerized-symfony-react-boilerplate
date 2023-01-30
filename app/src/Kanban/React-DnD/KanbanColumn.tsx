@@ -1,19 +1,14 @@
 import React from 'react';
 import {css} from "@emotion/css";
-import KanbanCard, {KanbanCardProps} from "./KanbanCard";
+import KanbanCard from "./KanbanCard";
 import CardContainer from "./CardContainer";
 import {useDrop} from "react-dnd";
-import {ItemTypes} from "../index";
+import {ItemTypes} from "../../index";
 import {deleteCard, deleteCards, generateCards} from "./StateManager";
 import DropSpace from "./DropSpace";
 import {DeleteOutlined, RedoOutlined} from "@ant-design/icons";
 import {Card} from "antd";
-
-export interface KanbanColumnProps {
-    id: string;
-    title: string;
-    cards: KanbanCardProps[];
-}
+import {KanbanColumnProps} from "../lib/resources/kanbanProps";
 
 export default function KanbanColumn(props: KanbanColumnProps) {
 

@@ -1,10 +1,9 @@
 import React, {Dispatch, SetStateAction, useState} from 'react';
 import {Button, Card, Form, Input, Select} from "antd";
 import {CloseOutlined} from "@ant-design/icons";
-import {KanbanCardProps} from "./KanbanCard";
 import {v4} from "uuid";
 import {addCard, initialCards} from "./StateManager";
-import {KanbanColumnProps} from "./KanbanColumn";
+import {KanbanCardProps, KanbanColumnProps} from "../lib/resources/kanbanProps";
 
 interface KanbanFormProps {
     toggleForm: () => void;

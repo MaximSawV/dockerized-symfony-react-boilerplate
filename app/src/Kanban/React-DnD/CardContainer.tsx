@@ -1,9 +1,10 @@
 import React from 'react';
 import {moveCard} from "./StateManager";
-import {DragItem, KanbanCardProps} from "./KanbanCard";
+import {DragItem} from "./KanbanCard";
 import {useDrop} from "react-dnd";
-import {ItemTypes} from '..';
+import {ItemTypes} from '../../index';
 import {css} from "@emotion/css";
+import {KanbanCardProps} from "../lib/resources/kanbanProps";
 
 interface CardContainerProps {
     columnId: string;

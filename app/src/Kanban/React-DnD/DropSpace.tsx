@@ -1,6 +1,6 @@
 import React from 'react';
 import {useDrop} from "react-dnd";
-import {ItemTypes} from "../index";
+import {ItemTypes} from "../../index";
 import {DragItem} from "./KanbanCard";
 import {moveCard} from "./StateManager";
 
