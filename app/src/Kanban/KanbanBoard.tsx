@@ -27,25 +27,6 @@ export const Columns: KanbanColumnProps[] = [
         cards: []
     },
 ];
-function renderColumn(cards: KanbanCardProps[]) {
-
-    return (
-        Columns.map((column, index) => {
-
-            let columnCards: KanbanCardProps[] = []
-
-            cards.forEach((card) => {
-                if (card.columnId === column.id) {
-                    columnCards.push(card);
-                }
-            })
-
-            return (
-                <KanbanColumn key={'column_'+index} id={column.id} title={column.title} cards={columnCards} />
-            )
-        })
-    )
-}
 
 interface KanbanBordProps {
     cards: KanbanCardProps[];
@@ -53,13 +34,34 @@ interface KanbanBordProps {
 export default function KanbanBoard(props: KanbanBordProps) {
 
     const [formIsOpen, setFormIsOpen] = useState<boolean>(false);
+    const [columns, setColumns] = useState<KanbanColumnProps[]>(Columns);
     const toggleForm = () => {
         setFormIsOpen(!formIsOpen);
     }
 
     useEffect(() => {
-        setFormIsOpen(false);
-    }, [Columns])
+        console.log(columns)
+    }, [columns])
+
+    const renderColumn = (cards: KanbanCardProps[]) => {
+
+        return (
+            columns.map((column, index) => {
+
+                let columnCards: KanbanCardProps[] = []
+
+                cards.forEach((card) => {
+                    if (card.columnId === column.id) {
+                        columnCards.push(card);
+                    }
+                })
+
+                return (
+                    <KanbanColumn key={'column_'+index} id={column.id} title={column.title} cards={columnCards} />
+                )
+            })
+        )
+    }
 
     return (
         <>
@@ -78,7 +80,7 @@ export default function KanbanBoard(props: KanbanBordProps) {
                 </Card>
             </DndProvider>
             {formIsOpen && (
-                <KanbanForm toggleForm={toggleForm} />
+                <KanbanForm toggleForm={toggleForm} columns={columns} setColumns={setColumns}/>
             )}
         </>
     )

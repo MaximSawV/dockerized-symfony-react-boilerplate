@@ -4,7 +4,6 @@ import {DeleteOutlined} from "@ant-design/icons";
 import {css} from "@emotion/css";
 import {useDrag} from "react-dnd";
 import {ItemTypes} from "../index";
-import {deleteCard} from "./StateManager";
 
 export interface KanbanCardProps {
     id: string,

@@ -1,19 +1,20 @@
-import React, {useState} from 'react';
+import React, {Dispatch, SetStateAction, useState} from 'react';
 import {Button, Card, Form, Input, Select} from "antd";
 import {CloseOutlined} from "@ant-design/icons";
 import {KanbanCardProps} from "./KanbanCard";
 import {v4} from "uuid";
 import {addCard, initialCards} from "./StateManager";
-import {Columns} from "./KanbanBoard";
-import KanbanColumn, {KanbanColumnProps} from "./KanbanColumn";
+import {KanbanColumnProps} from "./KanbanColumn";
 
 interface KanbanFormProps {
     toggleForm: () => void;
+    columns: KanbanColumnProps[];
+    setColumns: Dispatch<SetStateAction<KanbanColumnProps[]>>;
 }
 
 export default function KanbanForm(props: KanbanFormProps) {
 
-    const {toggleForm,} = props;
+    const {toggleForm, columns, setColumns} = props;
 
     const [formType, setFormType] = useState<string|null>('card');
 
@@ -43,6 +44,7 @@ export default function KanbanForm(props: KanbanFormProps) {
     };
 
     const onFinishColumn = (values: { position: string, title: string }) => {
+
         let newColumn: KanbanColumnProps = {
             id: v4(),
             title: values.title,
@@ -50,21 +52,19 @@ export default function KanbanForm(props: KanbanFormProps) {
         }
 
         if (values.position === 'first') {
-            Columns.splice(0, 0, newColumn);
+            columns.splice(0, 0, newColumn);
         }
 
         if (values.position === 'last') {
-            Columns.push(newColumn);
+            columns.push(newColumn);
         }
 
         if (values.position !== 'first' && values.position !== 'last') {
-            console.log(values.position.slice(0, values.position.indexOf('-')));
-            console.log(values.position.slice(values.position.indexOf('-') + 1));
 
             let firstColumn: KanbanColumnProps|null = null;
             let secondColumn: KanbanColumnProps|null = null;
 
-            Columns.forEach((column) => {
+            columns.forEach((column) => {
                 if(values.position.slice(0, values.position.indexOf('-')) === column.title) {
                     firstColumn = column;
                 }
@@ -75,11 +75,13 @@ export default function KanbanForm(props: KanbanFormProps) {
             })
 
             if (firstColumn && secondColumn) {
-                Columns.splice(Columns.indexOf(firstColumn), 0, newColumn);
+                columns.splice(columns.indexOf(firstColumn)+1, 0, newColumn);
             }
         }
 
+        setColumns(columns);
         formCard.resetFields();
+        toggleForm();
     };
 
     const onSelect = (value: string) => {
@@ -113,7 +115,7 @@ export default function KanbanForm(props: KanbanFormProps) {
                             placeholder="Select Column to add the Card to"
                             allowClear
                         >
-                            {Columns.map((column, index) => {
+                            {columns.map((column, index) => {
                                 return (
                                     <Option key={index} value={column.id}>{column.title}</Option>
                                 )
@@ -138,14 +140,14 @@ export default function KanbanForm(props: KanbanFormProps) {
                             allowClear
                         >
                             <Option key={'first'}>First</Option>
-                            {Columns.map((column, index) => {
-                                if (index < Columns.length - 1) {
+                            {columns.map((column, index) => {
+                                if (index < columns.length - 1) {
                                     return (
                                         <Option
                                             key={index}
-                                            value={column.title + '-' + Columns[index+1].title}
+                                            value={column.title + '-' + columns[index+1].title}
                                         >
-                                            Between {column.title} and {Columns[index+1].title}
+                                            Between {column.title} and {columns[index+1].title}
                                         </Option>
                                     )
                                 }

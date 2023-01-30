@@ -11,7 +11,6 @@ export function addCard(card: KanbanCardProps) {
 }
 
 export function deleteCard(card: KanbanCardProps) {
-    console.log(card);
     initialCards.splice(initialCards.indexOf(card), 1);
     emitChange();
 }
