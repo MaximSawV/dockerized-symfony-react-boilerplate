@@ -1,26 +1,23 @@
 import React from 'react';
 import {useDrop} from "react-dnd";
 import {ItemTypes} from "../../index";
-import {DragItem} from "./KanbanCard";
 import {moveCard} from "./StateManager";
+import {KanbanCardProps} from "../lib/resources/columns";
 
 interface props {
     columnId: string
 }
 export default function DropSpace(props: props) {
 
-    const [{isOver}, drop] = useDrop(
+    const [, drop] = useDrop(
         () => ({
             accept: ItemTypes.CARD,
-            drop: (item: DragItem) => moveCard(item.id, props.columnId, 'last', null),
-            collect: monitor => ({
-                isOver: monitor.isOver(),
-            }),
+            drop: (item: KanbanCardProps) => moveCard(item, null, item.columnId, props.columnId),
         }),
         [props.columnId]
     );
 
     return (
-        <div ref={drop} style={{width: '100%', height: '50%', backgroundColor: '#6E6E6E', opacity: isOver ? 0.3 : 0}} />
+        <div ref={drop} style={{width: '100%', height: '50%', opacity: 0}} />
     )
 }

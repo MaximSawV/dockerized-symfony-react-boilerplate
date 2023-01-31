@@ -7,34 +7,25 @@ import {HTML5Backend} from "react-dnd-html5-backend";
 import {AppstoreAddOutlined} from "@ant-design/icons";
 import Title from "antd/lib/typography/Title";
 import KanbanForm from "./KanbanForm";
-import {Columns} from "../lib/resources/columns";
-import {KanbanCardProps, KanbanColumnProps} from "../lib/resources/kanbanProps";
-interface KanbanBordProps {
-    cards: KanbanCardProps[];
-}
-export default function KanbanBoard(props: KanbanBordProps) {
+import {KanbanBoardProps, KanbanColumnProps} from "../lib/resources/columns";
+
+export default function DnDKanbanBoard(props: KanbanBoardProps) {
+
+    const { data } = props;
 
     const [formIsOpen, setFormIsOpen] = useState<boolean>(false);
-    const [columns, setColumns] = useState<KanbanColumnProps[]>(Columns);
+    const [columns, setColumns] = useState<KanbanColumnProps[]>(data);
     const toggleForm = () => {
         setFormIsOpen(!formIsOpen);
     }
 
-    const renderColumn = (cards: KanbanCardProps[]) => {
+    const renderColumn = () => {
 
         return (
             columns.map((column, index) => {
 
-                let columnCards: KanbanCardProps[] = []
-
-                cards.forEach((card) => {
-                    if (card.columnId === column.id) {
-                        columnCards.push(card);
-                    }
-                })
-
                 return (
-                    <KanbanColumn key={'column_'+index} id={column.id} title={column.title} cards={columnCards} />
+                    <KanbanColumn key={'column_'+index} id={column.id} title={column.title} cards={column.cards} />
                 )
             })
         )
@@ -53,7 +44,7 @@ export default function KanbanBoard(props: KanbanBordProps) {
                     className={css`height: calc(100% - 100px);`}
                     bodyStyle={{display: 'flex', flexDirection: 'row'}}
                 >
-                    {renderColumn(props.cards)}
+                    {renderColumn()}
                 </Card>
             </DndProvider>
             {formIsOpen && (

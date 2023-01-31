@@ -1,3 +1,6 @@
+export interface KanbanBoardProps {
+    data: KanbanColumnProps[]
+}
 export interface KanbanColumnProps {
     id: string;
     title: string;
@@ -8,9 +11,6 @@ export interface KanbanCardProps {
     id: string;
     title: string;
     columnId: string;
-    order?: number;
-
-    onDelete?: () => void;
     index?: number;
 }
 

@@ -1,8 +1,8 @@
 import React from 'react';
-import {deleteCards, generateCards} from "../React-DnD/StateManager";
+import {generateCards} from "../React-DnD/StateManager";
 import {Card} from "antd";
 import {css} from "@emotion/css";
-import {DeleteOutlined, RedoOutlined} from "@ant-design/icons";
+import {RedoOutlined} from "@ant-design/icons";
 import {Droppable} from "react-beautiful-dnd";
 import KanbanCard from "./KanbanCard";
 import {KanbanColumnProps} from "../lib/resources/columns";
@@ -33,10 +33,6 @@ export default function KanbanColumn(props: KanbanColumnProps) {
         generateCards(100, id);
     }
 
-    const deleteCardsInColumn = () => {
-        deleteCards(id);
-    }
-
     return (
         <Droppable droppableId={id}>
             {(provided) => (
@@ -53,7 +49,6 @@ export default function KanbanColumn(props: KanbanColumnProps) {
                     bodyStyle={{width: '350px', height: '850px', maxHeight: '1000px', overflowY: 'auto'}}
                     actions={[
                         <RedoOutlined key={"generate"} onClick={generateCardsInColumn}/>,
-                        <DeleteOutlined key={"delete"} onClick={deleteCardsInColumn}/>,
                     ]}
                 >
                     {renderCards()}

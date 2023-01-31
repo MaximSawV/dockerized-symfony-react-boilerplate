@@ -2,8 +2,8 @@ import React, {Dispatch, SetStateAction, useState} from 'react';
 import {Button, Card, Form, Input, Select} from "antd";
 import {CloseOutlined} from "@ant-design/icons";
 import {v4} from "uuid";
-import {addCard, initialCards} from "./StateManager";
-import {KanbanCardProps, KanbanColumnProps} from "../lib/resources/kanbanProps";
+import {addCard} from "./StateManager";
+import {KanbanCardProps, KanbanColumnProps} from "../lib/resources/columns";
 
 interface KanbanFormProps {
     toggleForm: () => void;
@@ -36,9 +36,8 @@ export default function KanbanForm(props: KanbanFormProps) {
             id: v4(),
             title: values.title,
             columnId: values.column,
-            order: initialCards.length,
         }
-        addCard(newCard);
+        addCard(newCard, values.column);
         formCard.resetFields();
     };
 

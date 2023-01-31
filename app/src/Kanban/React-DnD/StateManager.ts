@@ -1,33 +1,27 @@
 import {v4} from "uuid";
-import {KanbanCardProps} from "../lib/resources/kanbanProps";
+import {Columns, findColumn, KanbanCardProps} from "../lib/resources/columns";
 
-const cardsFromBackend: KanbanCardProps[] = [];
-export let initialCards: KanbanCardProps[] = sort();
+export function addCard(card: KanbanCardProps, columnId: string) {
+    const column = findColumn(columnId);
 
-
-export function addCard(card: KanbanCardProps) {
-    initialCards.push(card);
-    emitChange();
+    if (column) {
+        column.cards.push(card)
+        emitChange();
+    }
 }
 
-export function deleteCard(card: KanbanCardProps) {
-    initialCards.splice(initialCards.indexOf(card), 1);
-    emitChange();
-}
-export function deleteCards(column: string) {
-    initialCards = initialCards.filter(card => card.columnId !== column);
+export function generateCards(number: number, columnId: string) {
+    const column = findColumn(columnId);
 
-    emitChange();
-}
-export function generateCards(number: number, column: string) {
+    if (!column) return;
 
     for (let i = 0; i < number; i++) {
-        initialCards.push(
+        column.cards.push(
             {
                 id: v4(),
-                title: 'Card Nr: ' + (initialCards.length + 1),
-                columnId: column,
-                order: initialCards.length + i,
+                title: 'Card Nr: ' + (column.cards.length + 1),
+                columnId: column.id,
+                order: column.cards.length + i,
             } as KanbanCardProps
         )
     }
@@ -35,31 +29,10 @@ export function generateCards(number: number, column: string) {
     emitChange();
 }
 
-function compare( a: KanbanCardProps, b: KanbanCardProps ) {
-    if ( a.order! < b.order! ){
-        return -1;
-    }
-
-    if ( a.order! > b.order! ){
-        return +1;
-    }
-
-    return 0;
-}
-function sort() {
-    let sortedCards: KanbanCardProps[] = [];
-    if (cardsFromBackend.length > 0) {
-        sortedCards = cardsFromBackend.sort(compare);
-    }
-
-    return sortedCards;
-}
-
 let observer: any = null
 
 function emitChange() {
-    initialCards = initialCards.sort(compare);
-    observer(initialCards)
+    observer(Columns);
 }
 
 export function observe(o: any) {
@@ -71,58 +44,34 @@ export function observe(o: any) {
     emitChange();
 }
 
-function realign() {
-    for (let i = 0; i < initialCards.length; i++) {
-        initialCards[i].order = i;
-    }
-}
+export function moveCard(sourceCard: KanbanCardProps, destinationCard: KanbanCardProps | null, sourceColumnId: string, destinationColumnId: string) {
+    if(sourceCard === destinationCard) return;
 
-function placeCardOver(card: KanbanCardProps, index: number, movedCard: KanbanCardProps) {
+    const newSourceCard = {...sourceCard, columnId: destinationColumnId};
 
-    const moveIndex = initialCards.indexOf(movedCard);
-    initialCards.splice(index, 1);
-    initialCards.splice(moveIndex, 0, card);
-}
-
-function placeCardFirst(index: number, card: KanbanCardProps) {
-
-    initialCards.splice(index, 1);
-    initialCards.unshift(card)
-}
-
-function placeCardLast(index: number, card: KanbanCardProps) {
-
-    initialCards.splice(index, 1);
-    initialCards.push(card);
-}
-
-export function moveCard(movingCard: string, columnId: string, method: 'over' | 'last' | 'first', movedCard: KanbanCardProps|null ) {
-
-    initialCards.forEach((card, index) => {
-
-        if (card.id === movingCard) {
-
-            if (card.columnId !== columnId) {
-                card.columnId = columnId;
-                card.order = initialCards.length - 1;
+    for (const column of Columns) {
+        if (column.id === sourceColumnId) {
+            for (let i = 0; i < column.cards.length; i++) {
+                if (column.cards[i].id === newSourceCard.id) {
+                    column.cards.splice(i, 1);
+                    break;
+                }
             }
-
-            switch (method) {
-                case 'first':
-                    placeCardFirst(index, card);
-                    break;
-                case 'last':
-                    placeCardLast(index, card);
-                    break;
-                case 'over':
-                    if (movedCard) {
-                        placeCardOver(card, index, movedCard);
-                    }
-                    break;
-            }
-
-            realign();
-            emitChange();
         }
-    })
+
+        if (column.id === destinationColumnId && destinationCard) {
+            for (let i = 0; i < column.cards.length; i++) {
+                if (column.cards[i].id === destinationCard.id) {
+                    column.cards.splice(i, 0, newSourceCard);
+                    break;
+                }
+            }
+        }
+
+        if (!destinationCard && column.id === destinationColumnId) {
+            column.cards.push(newSourceCard);
+        }
+    }
+
+    emitChange();
 }
