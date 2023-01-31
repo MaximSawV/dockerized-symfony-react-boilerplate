@@ -1,11 +1,11 @@
 import React from 'react';
-import {KanbanColumnProps} from "../lib/resources/kanbanProps";
-import {deleteCard, deleteCards, generateCards} from "../React-DnD/StateManager";
+import {deleteCards, generateCards} from "../React-DnD/StateManager";
 import {Card} from "antd";
 import {css} from "@emotion/css";
 import {DeleteOutlined, RedoOutlined} from "@ant-design/icons";
 import {Droppable} from "react-beautiful-dnd";
 import KanbanCard from "./KanbanCard";
+import {KanbanColumnProps} from "../lib/resources/columns";
 
 export default function KanbanColumn(props: KanbanColumnProps) {
 
@@ -39,7 +39,7 @@ export default function KanbanColumn(props: KanbanColumnProps) {
 
     return (
         <Droppable droppableId={id}>
-            {(provided, snapshot) => (
+            {(provided) => (
                 <Card
                     ref={provided.innerRef}
                     {...provided.droppableProps}

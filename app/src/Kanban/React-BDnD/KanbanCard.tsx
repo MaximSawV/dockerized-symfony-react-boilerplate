@@ -1,9 +1,9 @@
 import React from 'react';
-import {KanbanCardProps} from "../lib/resources/kanbanProps";
 import {Draggable} from "react-beautiful-dnd";
 import {DeleteOutlined} from "@ant-design/icons";
 import {Card} from "antd";
 import {css} from "@emotion/css";
+import {KanbanCardProps} from "../lib/resources/columns";
 
 export default function KanbanCard(props: KanbanCardProps) {
 

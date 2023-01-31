@@ -1,32 +1,24 @@
 import React, {useState} from 'react';
-import {Columns, findColumn} from "../lib/resources/columns";
+import {Columns, findCard, KanbanColumnProps} from "../lib/resources/columns";
 import {Button, Card} from "antd";
 import Title from "antd/lib/typography/Title";
 import {AppstoreAddOutlined} from "@ant-design/icons";
 import KanbanForm from "../React-DnD/KanbanForm";
-import {KanbanCardProps, KanbanColumnProps} from "../lib/resources/kanbanProps";
 import {DragDropContext, DropResult} from "react-beautiful-dnd";
 import KanbanColumn from "./KanbanColumn";
-import {Cards, findCard} from "../lib/resources/cards";
 import {css} from "@emotion/css";
 export default function KanbanBoard() {
 
     const [formIsOpen, setFormIsOpen] = useState<boolean>(false);
     const [columns, setColumns] = useState<KanbanColumnProps[]>(Columns);
-    const [cards, setCards] = useState<KanbanCardProps[]>(Cards)
     const toggleForm = () => {
         setFormIsOpen(!formIsOpen);
     }
 
-    const renderColumn = (cards: KanbanCardProps[]) => {
+    const renderColumn = () => {
 
         return (
             columns.map((column, index) => {
-                cards.forEach((card) => {
-                    if (card.columnId === column.id) {
-                        column.cards.push(card);
-                    }
-                })
 
                 return (
                     <KanbanColumn key={'column_'+index} id={column.id} title={column.title} cards={column.cards} />
@@ -46,17 +38,17 @@ export default function KanbanBoard() {
 
         if (destination.droppableId === source.droppableId && destination.index === source.index) return;
 
-        const column: KanbanColumnProps|null = findColumn(source.droppableId);
+        for (const column of columns) {
+            if (column.id === source.droppableId) {
+                column.cards.splice(source.index, 1);
+            }
 
-        if (column) {
-            const newCardIds: KanbanCardProps[] = column['cards'];
-            newCardIds.splice(source.index, 1);
-            newCardIds.splice(destination.index, 0, draggedCard);
-
-            setCards([]);
-            setCards(newCardIds);
+            if (column.id === destination.droppableId) {
+                column.cards.splice(destination.index, 0, draggedCard);
+            }
         }
 
+        setColumns(columns);
     }
 
     return (
@@ -73,7 +65,7 @@ export default function KanbanBoard() {
                     className={css`height: calc(100% - 100px);`}
                     bodyStyle={{display: 'flex', flexDirection: 'row'}}
                 >
-                    {renderColumn(cards)}
+                    {renderColumn()}
                 </Card>
             </DragDropContext>
             {formIsOpen && (
