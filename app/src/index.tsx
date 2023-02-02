@@ -4,6 +4,7 @@ import './index.css';
 import {observe} from "./Kanban/React-DnD/StateManager";
 import {Columns, KanbanColumnProps} from "./Kanban/lib/resources/columns";
 import DnDKanbanBoard from "./Kanban/React-DnD/DnDKanbanBoard";
+import BeautifulKanbanBoard from "./Kanban/React-BDnD/BeautifulKanbanBoard";
 
 export const ItemTypes = {
     CARD: 'card',
@@ -12,12 +13,12 @@ export const ItemTypes = {
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement
 );
 
-observe( (data: KanbanColumnProps[]) => root.render(
-    <React.StrictMode>
-        <DnDKanbanBoard data={Columns} />
-    </React.StrictMode>
-))
+// observe( (data: KanbanColumnProps[]) => root.render(
+//     <React.StrictMode>
+//         <DnDKanbanBoard data={Columns} />
+//     </React.StrictMode>
+// ))
 
-// root.render(
-//     <DnDKanbanBoard />
-// )
+root.render(
+    <BeautifulKanbanBoard />
+)

@@ -22,6 +22,7 @@ export function generateCards(number: number, columnId: string) {
                 title: 'Card Nr: ' + (column.cards.length + 1),
                 columnId: column.id,
                 order: column.cards.length + i,
+                avatarColor: '#'+(0x1000000+Math.random()*0xffffff).toString(16).slice(0,6),
             } as KanbanCardProps
         )
     }
@@ -45,6 +46,7 @@ export function observe(o: any) {
 }
 
 export function moveCard(sourceCard: KanbanCardProps, destinationCard: KanbanCardProps | null, sourceColumnId: string, destinationColumnId: string) {
+
     if(sourceCard === destinationCard) return;
 
     const newSourceCard = {...sourceCard, columnId: destinationColumnId};

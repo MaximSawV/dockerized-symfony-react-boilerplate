@@ -1,30 +1,31 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {css} from "@emotion/css";
 import KanbanCard from "./KanbanCard";
 import {generateCards} from "./StateManager";
 import DropSpace from "./DropSpace";
 import {RedoOutlined} from "@ant-design/icons";
-import {Card} from "antd";
 import {KanbanColumnProps} from "../lib/resources/columns";
+import {Card} from "antd";
 
 export default function KanbanColumn(props: KanbanColumnProps) {
 
     const {id, title, cards} = props
+    const [firstCardIndex, setFirstCardIndex] = useState<number>(0);
+    const columnRef = useRef<HTMLDivElement>(null);
 
+    const test = [...cards].slice(firstCardIndex,10);
     const renderCards = () => {
-        if (cards.length > 0) {
+        if (test.length > 0) {
             return (
-                cards.map((card) => {
+                test.map((card) => {
 
                     return (
-                        <>
+                        <div>
                             <KanbanCard
                                 key={'card_' + card.id}
-                                id={card.id}
-                                title={card.title}
-                                columnId={card.columnId}
-                            />
-                        </>
+                                card={card}
+                                />
+                        </div>
                     )
                 })
             )
@@ -32,8 +33,16 @@ export default function KanbanColumn(props: KanbanColumnProps) {
     }
 
     const generateCardsInColumn = () => {
-        generateCards(100, id);
+        generateCards(1000, id);
     }
+
+    useEffect(() => {
+        if (columnRef.current) {
+            if (columnRef.current.childElementCount > 1 && columnRef.current.firstElementChild) {
+                console.log(columnRef.current.firstElementChild);
+            }
+        }
+    },[test])
 
     return (
         <Card
@@ -44,13 +53,15 @@ export default function KanbanColumn(props: KanbanColumnProps) {
               margin: 20px;
               background-color: rgba(175, 193, 199, 0.75);
             `}
-            bodyStyle={{width: '350px', height: '850px', maxHeight: '1000px', overflowY: 'auto'}}
+            bodyStyle={{width: '350px', height: '850px'}}
             actions={[
                 <RedoOutlined key={"generate"} onClick={generateCardsInColumn}/>,
             ]}
         >
-            {renderCards()}
-            <DropSpace key={'DropSpace' + id} columnId={id} />
+            <div ref={columnRef} className={'card-list'} style={{height: '100%', maxHeight: '850px', overflowY: 'auto', width: '100%'}}>
+                {renderCards()}
+                <DropSpace key={'DropSpace' + id} columnId={id}/>
+            </div>
         </Card>
     )
 }

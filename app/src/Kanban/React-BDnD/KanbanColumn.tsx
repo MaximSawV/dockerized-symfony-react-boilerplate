@@ -10,19 +10,19 @@ import {KanbanColumnProps} from "../lib/resources/columns";
 export default function KanbanColumn(props: KanbanColumnProps) {
 
     const {id, title, cards} = props
-
     const renderCards = () => {
         if (cards.length > 0) {
             return (
                 cards.map((card, index) => {
 
                     return (
-                        <KanbanCard
-                            key={'card_' + card.id}
-                            id={card.id}
-                            title={card.title}
-                            index={index}
-                            columnId={id}/>
+                            <KanbanCard
+                                key={'card_' + card.id}
+                                id={card.id}
+                                title={card.title}
+                                index={index}
+                                columnId={id}
+                                avatarColor={card.avatarColor}/>
                     )
                 })
             )

@@ -12,6 +12,7 @@ export interface KanbanCardProps {
     title: string;
     columnId: string;
     index?: number;
+    avatarColor: string;
 }
 
 export const Columns: KanbanColumnProps[] = [
@@ -19,21 +20,6 @@ export const Columns: KanbanColumnProps[] = [
         id: '0',
         title: 'Todo',
         cards: [
-            {
-                id: '0',
-                title: 'test 1',
-                columnId: '0'
-            },
-            {
-                id: '1',
-                title: 'test 2',
-                columnId: '0'
-            },
-            {
-                id: '2',
-                title: 'test 3',
-                columnId: '0'
-            }
         ]
     },
     {

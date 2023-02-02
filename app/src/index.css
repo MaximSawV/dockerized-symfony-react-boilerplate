@@ -27,6 +27,6 @@ code {
     monospace;
 }
 
-.ant-card-body::-webkit-scrollbar {
+.card-list::-webkit-scrollbar {
   display: none;
 }

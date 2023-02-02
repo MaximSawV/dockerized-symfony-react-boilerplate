@@ -36,6 +36,7 @@ export default function KanbanForm(props: KanbanFormProps) {
             id: v4(),
             title: values.title,
             columnId: values.column,
+            avatarColor: '#'+(0x1000000+Math.random()*0xffffff).toString(16).slice(0,6),
         }
         addCard(newCard, values.column);
         formCard.resetFields();
