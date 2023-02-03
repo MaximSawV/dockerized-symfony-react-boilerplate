@@ -13,12 +13,12 @@ export const ItemTypes = {
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement
 );
 
-// observe( (data: KanbanColumnProps[]) => root.render(
-//     <React.StrictMode>
-//         <DnDKanbanBoard data={Columns} />
-//     </React.StrictMode>
-// ))
+observe( (data: KanbanColumnProps[]) => root.render(
+    <React.StrictMode>
+        <DnDKanbanBoard data={Columns} />
+    </React.StrictMode>
+))
 
-root.render(
-    <BeautifulKanbanBoard />
-)
+// root.render(
+//     <BeautifulKanbanBoard />
+// )

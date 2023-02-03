@@ -2,26 +2,30 @@ import React, {useState} from 'react';
 import {css} from "@emotion/css";
 import KanbanCard from "./KanbanCard";
 import {generateCards} from "./StateManager";
-import {RedoOutlined} from "@ant-design/icons";
+import {RedoOutlined, SearchOutlined} from "@ant-design/icons";
 import {KanbanColumnProps} from "../lib/resources/columns";
 import {Card} from "antd";
 import DropSpace from "./DropSpace";
+import {v4} from "uuid";
 
 export default function KanbanColumn(props: KanbanColumnProps) {
 
     const {id, title, cards} = props
     const [firstCardIndex, setFirstCardIndex] = useState<number>(0);
+    const cardHeight = 152;
+    const topSpacerHeight = firstCardIndex * cardHeight;
+    const bottomSpacerHeight = (cards.length - (15 + firstCardIndex)) * cardHeight;
 
-    const test = [...cards].slice(firstCardIndex,15+firstCardIndex);
+    const test = [...cards].slice(firstCardIndex,15 + firstCardIndex);
     const renderCards = () => {
         if (test.length > 0) {
             return (
                 test.map((card) => {
 
                     return (
-                        <div>
+                        <div style={{overflowAnchor: 'none'}}>
                             <KanbanCard
-                                key={'card_' + card.id}
+                                key={v4()}
                                 card={card}
                                 />
                         </div>
@@ -32,12 +36,24 @@ export default function KanbanColumn(props: KanbanColumnProps) {
     }
 
     const generateCardsInColumn = () => {
-        generateCards(1000, id);
+        generateCards(100, id);
     }
 
     const onScroll = (event: any) => {
-        setFirstCardIndex(Math.floor(event.currentTarget.scrollTop / 148));
-        console.log(event.currentTarget.scrollTop);
+        const scrollHeight = event.currentTarget.scrollTop;
+        const newIndex = Math.floor(scrollHeight / cardHeight)
+        if (newIndex >= 95) {
+            setFirstCardIndex(95);
+        } else {
+            if (newIndex >= 5 || newIndex < firstCardIndex) {
+                setFirstCardIndex(newIndex);
+            }
+        }
+        console.log(test.length)
+    }
+
+    const logCardIndex = () => {
+        console.log(firstCardIndex)
     }
 
     return (
@@ -51,12 +67,17 @@ export default function KanbanColumn(props: KanbanColumnProps) {
             `}
             bodyStyle={{width: '350px', height: '850px'}}
             actions={[
-                <RedoOutlined key={"generate"} onClick={generateCardsInColumn}/>,
+                <RedoOutlined key={"generate!"} onClick={generateCardsInColumn}/>,
+                <SearchOutlined key={"check"} onClick={logCardIndex}/>,
             ]}
         >
-            <div className={'card-list'} style={{height: '100%', maxHeight: '850px', overflowY: 'auto', width: '100%'}} onScroll={(event) => onScroll(event)}>
-                {renderCards()}
-                <DropSpace key={'DropSpace' + id} columnId={id}/>
+            <div className={'card-list'} style={{maxHeight: '800px', overflowY: 'auto', width: '100%'}} onScroll={(event) => onScroll(event)}>
+                <div style={{height: (topSpacerHeight + bottomSpacerHeight + 15 * cardHeight) + 'px'}}>
+                    <div style={{width: '100%', height: topSpacerHeight +'px'}} />
+                    {renderCards()}
+                    <div style={{width: '100%', height: bottomSpacerHeight - 150 +'px'}} />
+                </div>
+                <DropSpace height={300} key={'DropSpace' + id} columnId={id}/>
             </div>
         </Card>
     )

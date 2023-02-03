@@ -6,6 +6,7 @@ import {KanbanCardProps} from "../lib/resources/columns";
 
 interface props {
     columnId: string
+    height: number
 }
 export default function DropSpace(props: props) {
 
@@ -18,6 +19,6 @@ export default function DropSpace(props: props) {
     );
 
     return (
-        <div ref={drop} style={{width: '100%', height: '50%', opacity: 0}} />
+        <div ref={drop} style={{width: '100%', height: props.height+'px', opacity: 0}} />
     )
 }
