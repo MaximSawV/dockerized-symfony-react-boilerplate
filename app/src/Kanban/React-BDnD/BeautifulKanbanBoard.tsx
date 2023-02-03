@@ -7,6 +7,7 @@ import KanbanForm from "../React-DnD/KanbanForm";
 import {DragDropContext, DropResult} from "react-beautiful-dnd";
 import KanbanColumn from "./KanbanColumn";
 import {css} from "@emotion/css";
+
 export default function BeautifulKanbanBoard() {
 
     const [formIsOpen, setFormIsOpen] = useState<boolean>(false);
@@ -47,8 +48,6 @@ export default function BeautifulKanbanBoard() {
                 column.cards.splice(destination.index, 0, draggedCard);
             }
         }
-
-        setColumns(columns);
     }
 
     return (

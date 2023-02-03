@@ -35,3 +35,7 @@ code {
 .card-list::-webkit-scrollbar {
   display: none;
 }
+
+.ant-card-body::-webkit-scrollbar {
+  display: none;
+}
