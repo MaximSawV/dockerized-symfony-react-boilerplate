@@ -1,19 +1,18 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {css} from "@emotion/css";
 import KanbanCard from "./KanbanCard";
 import {generateCards} from "./StateManager";
-import DropSpace from "./DropSpace";
 import {RedoOutlined} from "@ant-design/icons";
 import {KanbanColumnProps} from "../lib/resources/columns";
 import {Card} from "antd";
+import DropSpace from "./DropSpace";
 
 export default function KanbanColumn(props: KanbanColumnProps) {
 
     const {id, title, cards} = props
     const [firstCardIndex, setFirstCardIndex] = useState<number>(0);
-    const columnRef = useRef<HTMLDivElement>(null);
 
-    const test = [...cards].slice(firstCardIndex,10);
+    const test = [...cards].slice(firstCardIndex,15+firstCardIndex);
     const renderCards = () => {
         if (test.length > 0) {
             return (
@@ -36,13 +35,10 @@ export default function KanbanColumn(props: KanbanColumnProps) {
         generateCards(1000, id);
     }
 
-    useEffect(() => {
-        if (columnRef.current) {
-            if (columnRef.current.childElementCount > 1 && columnRef.current.firstElementChild) {
-                console.log(columnRef.current.firstElementChild);
-            }
-        }
-    },[test])
+    const onScroll = (event: any) => {
+        setFirstCardIndex(Math.floor(event.currentTarget.scrollTop / 148));
+        console.log(event.currentTarget.scrollTop);
+    }
 
     return (
         <Card
@@ -58,7 +54,7 @@ export default function KanbanColumn(props: KanbanColumnProps) {
                 <RedoOutlined key={"generate"} onClick={generateCardsInColumn}/>,
             ]}
         >
-            <div ref={columnRef} className={'card-list'} style={{height: '100%', maxHeight: '850px', overflowY: 'auto', width: '100%'}}>
+            <div className={'card-list'} style={{height: '100%', maxHeight: '850px', overflowY: 'auto', width: '100%'}} onScroll={(event) => onScroll(event)}>
                 {renderCards()}
                 <DropSpace key={'DropSpace' + id} columnId={id}/>
             </div>
